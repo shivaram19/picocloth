@@ -1,0 +1,1 @@
+"""PicoCloth-CLI test suite."""
