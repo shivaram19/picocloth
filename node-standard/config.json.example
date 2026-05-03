@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "agents": {
+    "defaults": {
+      "workspace": "{{PROJECT_ROOT}}/node-{{NODE_ID}}/workspace",
+      "restrict_to_workspace": false,
+      "model_name": "grok-4.1-fast",
+      "max_tokens": 2048,
+      "max_tool_iterations": 3,
+      "context_window": 32768,
+      "steering_mode": "one-at-a-time",
+      "system_prompt": "You are NODE-{{NODE_ID_UPPER}}, the {{ROLE}}. RAM-optimized mode: concise responses, minimal tool calls.",
+      "routing": {
+        "enabled": false
+      }
+    }
+  },
+  "channel_list": {
+    "pico": {
+      "enabled": true,
+      "type": "pico",
+      "settings": {
+        "ping_interval": 30,
+        "read_timeout": 60,
+        "write_timeout": 10,
+        "max_connections": 5,
+        "token": "fleet-token-node-{{NODE_ID}}"
+      }
+    }
+  },
+  "model_list": [
+    {
+      "model_name": "grok-4.1-fast",
+      "provider": "openai",
+      "model": "grok-4-1-fast-non-reasoning",
+      "api_base": "https://api.x.ai/v1",
+      "api_keys": [
+        "{{YOUR_XAI_API_KEY}}"
+      ],
+      "enabled": true
+    }
+  ],
+  "gateway": {
+    "host": "127.0.0.1",
+    "port": {{PORT}},
+    "log_level": "warn"
+  },
+  "heartbeat": {
+    "enabled": true,
+    "interval": 30
+  },
+  "hooks": {
+    "enabled": false
+  },
+  "tools": {
+    "web": {
+      "enabled": true,
+      "provider": "duckduckgo"
+    },
+    "mcp": {
+      "enabled": false
+    }
+  }
+}
