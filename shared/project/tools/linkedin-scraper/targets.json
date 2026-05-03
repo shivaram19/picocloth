@@ -1,0 +1,59 @@
+{
+  "targets": [
+    {
+      "name": "Kostya Rapina",
+      "profile_id": "kostya-rapina",
+      "profile_url": "https://www.linkedin.com/in/kostya-rapina/",
+      "company": "Powerkh",
+      "title": "CEO & Co-founder",
+      "priority": "high",
+      "angle": "War recovery + automation-first agency",
+      "sequence_file": "../../outreach/01_powerkh_sequence.md",
+      "connection_message": "Hi Kostya, I've been following Powerkh's work across UK, US, and Ukraine — impressive scale for a boutique team. We're building an AI document intelligence platform specifically for VDC agencies like yours: it auto-drafts RFIs and flags spec-drawing contradictions across the full document set. Would love to connect and share what we've built. No pitch, just curious if it resonates with the coordination challenges you're solving."
+    },
+    {
+      "name": "Han Hoang",
+      "profile_id": "han-hoang",
+      "profile_url": "https://www.linkedin.com/in/han-hoang/",
+      "company": "THE BIM FACTORY",
+      "title": "CEO",
+      "priority": "high",
+      "angle": "MIT pedigree + C-DRIVE innovation + offshore model",
+      "sequence_file": "../../outreach/02_bim_factory_sequence.md",
+      "connection_message": "Hi Han, I read your HKIBIM paper on C-DRIVE clash methodology — the systematic approach to clash prioritization and elimination is exactly the kind of forward-thinking work the industry needs. I'm building an AI document intelligence platform that applies a similar systematic approach to spec review and RFI drafting. Would love to connect and get your perspective from someone who's clearly thinking deeply about construction workflow automation."
+    },
+    {
+      "name": "Ajith Menon",
+      "profile_id": "ajith-menon",
+      "profile_url": "https://www.linkedin.com/in/ajith-menon/",
+      "company": "BIMAGE Consulting",
+      "title": "CEO & Managing Director",
+      "priority": "medium",
+      "angle": "Singapore smart city + GeoBIM + fastest growing company",
+      "sequence_file": "../../outreach/03_bimage_sequence.md",
+      "connection_message": "Hi Ajith, I read about BIMAGE's GeoBIM certification programme with Esri Singapore — bridging geospatial and BIM is exactly the kind of integrated thinking construction needs. I'm building an AI document intelligence platform that adds the document layer to digital construction workflows. Would love to connect and get your perspective as someone shaping Singapore's BIM landscape."
+    },
+    {
+      "name": "Tristen Magallanes",
+      "profile_id": "tristen-magallanes",
+      "profile_url": "https://www.linkedin.com/in/tristen-magallanes/",
+      "company": "DPR Construction",
+      "title": "Research & Development Manager",
+      "priority": "medium",
+      "angle": "Self-perform GC + innovation team entry point",
+      "sequence_file": "../../outreach/04_dpr_construction_sequence.md",
+      "connection_message": "Hi Tristen, I came across your work leading R&D at DPR and your involvement with Women in Construction Tech. DPR's self-perform model means your team absorbs the full document coordination burden — I'm building an AI document intelligence platform that reduces spec review and RFI drafting time by 80%. Would love to connect and get your perspective on where AI fits in DPR's tech roadmap."
+    },
+    {
+      "name": "David Antony",
+      "profile_id": "david-antony",
+      "profile_url": "https://www.linkedin.com/in/david-antony/",
+      "company": "Flatworld Solutions",
+      "title": "COO & President",
+      "priority": "low",
+      "angle": "AI differentiation for commoditized AEC outsourcing",
+      "sequence_file": "../../outreach/05_flatworld_solutions_sequence.md",
+      "connection_message": "Hi David, I read that you're steering AI initiatives at Flatworld Solutions. With 29 years in IT/ITES and a global delivery model, you're well-positioned to leverage AI for competitive differentiation. I'm building a white-label AI document intelligence platform specifically for AEC service providers — it auto-drafts RFIs and flags spec-drawing contradictions. Would love to connect and explore if it fits Flatworld's AI roadmap."
+    }
+  ]
+}

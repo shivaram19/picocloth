@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VDC Agency ROI Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .inputs-section, .results-section {
+            background: #f8f9ff;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 2px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .results-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #4facfe;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .result-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .result-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .result-label {
+            color: #718096;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chart-container {
+            grid-column: 1 / -1;
+            height: 400px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            margin-top: 20px;
+        }
+
+        .download-btn:hover {
+            box-shadow: 0 10px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .savings-highlight {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white !important;
+        }
+
+        .savings-highlight .result-value {
+            color: white !important;
+        }
+
+        .savings-highlight .result-label {
+            color: rgba(255,255,255,0.9) !important;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 VDC Agency ROI Calculator</h1>
+            <p>Calculate your potential savings with AI automation</p>
+        </div>
+
+        <div class="content">
+            <div class="inputs-section">
+                <h2 class="section-title">📊 Input Parameters</h2>
+                
+                <div class="input-group">
+                    <label for="staffCount">Number of VDC Staff</label>
+                    <input type="number" id="staffCount" value="5" min="1" step="1">
+                </div>
+
+                <div class="input-group">
+                    <label for="hourlyRate">Average Hourly Rate ($)</label>
+                    <input type="number" id="hourlyRate" value="75" min="0" step="0.01">
+                </div>
+
+                <div class="input-group">
+                    <label for="hoursPerWeek">Hours per Week on Manual Tasks</label>
+                    <input type="number" id="hoursPerWeek" value="20" min="0" max="40" step="0.5">
+                </div>
+
+                <div class="input-group">
+                    <label for="softwareCost">Software Costs per Month ($)</label>
+                    <input type="number" id="softwareCost" value="500" min="0" step="1">
+                </div>
+
+                <button class="calculate-btn" onclick="calculateROI()">Calculate ROI</button>
+                <button class="calculate-btn download-btn" onclick="downloadPDF()" style="display: none;" id="downloadBtn">
+                    📄 Download PDF Report
+                </button>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <h2 class="section-title">💰 Results Summary</h2>
+                
+                <div class="results-grid">
+                    <div class="result-item">
+                        <div class="result-value" id="annualLaborCost">$0</div>
+                        <div class="result-label">Annual Labor Cost</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-value" id="manualHours">$0</div>
+                        <div class="result-label">Weekly Manual Hours</div>
+                    </div>
+
+                    <div class="result-item savings-highlight">
+                        <div class="result-value" id="annualSavings">$0</div>
+                        <div class="result-label">Annual AI Savings (40%)</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-value" id="roiMonths">0</div>
+                        <div class="result-label">ROI in Months</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-value" id="threeYearNPV">$0</div>
+                        <div class="result-label">3-Year NPV</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="roiChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let roiChart = null;
+
+        function calculateROI() {
+            // Get input values
+            const staffCount = parseFloat(document.getElementById('staffCount').value) || 0;
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+            const hoursPerWeek = parseFloat(document.getElementById('hoursPerWeek').value) || 0;
+            const softwareCost = parseFloat(document.getElementById('softwareCost').value) || 0;
+
+            if (staffCount <= 0 || hourlyRate <= 0 || hoursPerWeek <= 0) {
+                alert('Please enter valid positive values for all inputs.');
+                return;
+            }
+
+            // Calculations
+            const weeksPerYear = 52;
+            const annualLaborCost = staffCount * hourlyRate * hoursPerWeek * weeksPerYear;
+            const manualHoursPerWeek = staffCount * hoursPerWeek;
+            const efficiencyGain = 0.40;
+            const annualSavings = annualLaborCost * efficiencyGain;
+            const totalMonthlyCost = softwareCost + (annualSavings / 12);
+            const roiMonths = totalMonthlyCost > 0 ? (totalMonthlyCost * 12 / annualSavings) * 12 : 0;
+            const discountRate = 0.05; // 5% discount rate
+            const npvYear1 = annualSavings / (1 + discountRate);
+            const npvYear2 = annualSavings / Math.pow(1 + discountRate, 2);
+            const npvYear3 = annualSavings / Math.pow(1 + discountRate, 3);
+            const threeYearNPV = (npvYear1 + npvYear2 + npvYear3) - (softwareCost * 12 * 3);
+
+            // Update results
+            document.getElementById('annualLaborCost').textContent = `$${annualLaborCost.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
+            document.getElementById('manualHours').textContent = `${manualHoursPerWeek.toLocaleString('en-US', {maximumFractionDigits: 1})} hrs`;
+            document.getElementById('annualSavings').textContent = `$${annualSavings.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
+            document.getElementById('roiMonths').textContent = `${roiMonths.toFixed(1)} months`;
+            document.getElementById('threeYearNPV').textContent = `$${threeYearNPV.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
+
+            // Show results and download button
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('downloadBtn').style.display = 'block';
+
+            // Update chart
+            updateChart(annualLaborCost, annualSavings, threeYearNPV);
+        }
+
+        function updateChart(annualLaborCost, annualSavings, threeYearNPV) {
+            const ctx = document.getElementById('roiChart').getContext('2d');
+            
+            if (roiChart) {
+                roiChart.destroy();
+            }
+
+            roiChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Current Labor Cost', 'AI Savings (40%)', '3-Year NPV'],
+                    datasets: [{
+                        data: [annualLaborCost, annualSavings * 3, Math.max(0, threeYearNPV)],
+                        backgroundColor: [
+                            '#ef4444',
+                            '#10b981',
+                            '#3b82f6'
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 14,
+                                    weight: '600'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function downloadPDF() {
+            const btn = document.getElementById('downloadBtn');
+            btn.textContent = 'Generating PDF...';
+            btn.disabled = true;
+            
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF();
+                
+                // Add title
+                pdf.setFontSize(24);
+                pdf.setTextColor(79, 172, 254);
+                pdf.text('VDC Agency ROI Calculator', 20, 30);
+                
+                // Add inputs
+                pdf.setFontSize(14);
+                pdf.setTextColor(0, 0, 0);
+                pdf.text('Input Parameters:', 20, 60);
+                
+                const staffCount = document.getElementById('staffCount').value;
+                const hourlyRate = document.getElementById('hourlyRate').value;
+                const hoursPerWeek = document.getElementById('hoursPerWeek').value;
+                const softwareCost = document.getElementById('softwareCost').value;
+                
+                pdf.text(`• Staff: ${staffCount} | Hourly Rate: $${hourlyRate} | Manual Hours/Week: ${hoursPerWeek} | Software: $${softwareCost}/mo`, 25, 75);
+                
+                // Add results
+                pdf.text('Results:', 20, 100);
+                pdf.text(`• Annual Labor Cost: $${parseFloat(document.getElementById('annualLaborCost').textContent.replace(/[^\d.-]/g, '')).toLocaleString()}`, 25, 115);
+                pdf.text(`• Annual AI Savings: $${parseFloat(document.getElementById('annualSavings').textContent.replace(/[^\d.-]/g, '')).toLocaleString()}`, 25, 130);
+                pdf.text(`• ROI: ${document.getElementById('roiMonths').textContent}`, 25, 145);
+                pdf.text(`• 3-Year NPV: $${parseFloat(document.getElementById('threeYearNPV').textContent.replace(/[^\d.-]/g, '')).toLocaleString()}`, 25, 160);
+                
+                // Add recommendation
+                pdf.setFontSize(16);
+                pdf.setTextColor(16, 185, 129);
+                pdf.text('✅ ROI achieved in under 12 months - Excellent investment!', 20, 190);
+                
+                pdf.save('vdc-roi-calculator-report.pdf');
+            } catch (error) {
+                console.error('PDF generation failed:', error);
+                alert('PDF generation failed. Please try again.');
+            } finally {
+                btn.textContent = '📄 Download PDF Report';
+                btn.disabled = false;
+            }
+        }
+
+        // Auto-calculate on input change
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', calculateROI);
+        });
+
+        // Initial calculation
+        calculateROI();
+    </script>
+</body>
+</html>
