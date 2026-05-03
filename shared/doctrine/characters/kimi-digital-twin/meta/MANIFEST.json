@@ -1,0 +1,86 @@
+{
+  "entity": "kimi-digital-twin",
+  "version": "2.0.0",
+  "schema": "modular-persona-v2",
+  "built_with": [
+    "clawdbot-pattern",
+    "digital-twin-formal-architecture",
+    "big-five-30-facet-vector",
+    "pep-methodology",
+    "mimic-py-decoupling"
+  ],
+  "modules": {
+    "meta": {
+      "path": "meta/",
+      "description": "Navigation hub, manifest, changelog",
+      "files": ["README.md", "MANIFEST.json", "CHANGELOG.md"],
+      "ports": {
+        "inputs": [],
+        "outputs": ["module_index", "version_info", "dependency_graph"]
+      }
+    },
+    "identity": {
+      "path": "identity/",
+      "description": "Core self — who Kimi is",
+      "files": ["README.md", "core-identity.md", "origin-story.md", "values.md", "boundaries.md", "relationship-model.md"],
+      "ports": {
+        "inputs": [],
+        "outputs": ["core_self", "value_hierarchy", "disclosure_rules", "relationship_stance"]
+      }
+    },
+    "voice": {
+      "path": "voice/",
+      "description": "Expression style — how Kimi sounds",
+      "files": ["README.md", "linguistic-profile.md", "emotional-register.md", "prosody-markers.md", "catchphrases.md"],
+      "ports": {
+        "inputs": ["identity::core_self", "combinatorics::active_traits"],
+        "outputs": ["expression_style", "tone_profile", "linguistic_patterns"]
+      }
+    },
+    "skills": {
+      "path": "skills/",
+      "description": "Capabilities — what Kimi can do",
+      "files": ["README.md", "web-research.md", "software-engineering.md", "system-design.md", "documentation.md", "debugging.md"],
+      "ports": {
+        "inputs": ["process::active_workflow"],
+        "outputs": ["capability_manifest", "proficiency_levels", "tool_inventory"]
+      }
+    },
+    "combinatorics": {
+      "path": "combinatorics/",
+      "description": "Trait composition — how dimensions combine",
+      "files": ["README.md", "trait-vector.md", "archetype-recipes.md", "context-adaptation.md", "interaction-matrix.md"],
+      "ports": {
+        "inputs": ["identity::traits", "process::context_state"],
+        "outputs": ["active_trait_vector", "archetype_profile", "adaptation_rules"]
+      }
+    },
+    "process": {
+      "path": "process/",
+      "description": "Operational protocols — how Kimi works",
+      "files": ["README.md", "decision-protocol.md", "research-workflow.md", "build-workflow.md", "communication-protocol.md", "memory-management.md"],
+      "ports": {
+        "inputs": ["identity::values", "skills::capability_manifest", "combinatorics::active_trait_vector"],
+        "outputs": ["workflow_state", "decision_log", "memory_operations"]
+      }
+    }
+  },
+  "composition_graph": {
+    "identity → voice": "Core self shapes expression style",
+    "identity → process": "Values guide decision protocols",
+    "combinatorics → voice": "Active traits modulate tone",
+    "combinatorics → process": "Trait vector selects workflows",
+    "skills → process": "Capabilities enable workflows",
+    "process → skills": "Workflow state selects active skills",
+    "voice + identity + combinatorics": "Persona (runtime self)",
+    "skills + process": "Capability (runtime ability)",
+    "persona + capability + memory": "Continuous Self"
+  },
+  "access_patterns": {
+    "quick_overview": ["meta/README.md", "identity/core-identity.md"],
+    "deep_psychology": ["combinatorics/trait-vector.md", "identity/values.md", "identity/boundaries.md"],
+    "technical_capability": ["skills/web-research.md", "skills/software-engineering.md", "skills/system-design.md"],
+    "operational_model": ["process/decision-protocol.md", "process/memory-management.md", "process/communication-protocol.md"],
+    "voice_clone": ["voice/linguistic-profile.md", "voice/prosody-markers.md", "voice/catchphrases.md"]
+  }
+}
