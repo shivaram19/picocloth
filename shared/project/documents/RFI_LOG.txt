@@ -1,0 +1,11 @@
+PROJECT: DOWNTOWN OFFICE TOWER - RFI LOG
+
+RFI-001: Column spacing at Grid Line C-4 does not match between structural drawings and architectural plans. Structural shows 24'-0" spacing, architectural shows 25'-0". Please confirm.
+
+RFI-002: Mechanical room ceiling height shown as 10 feet on A-101, but mechanical equipment requires 12 feet minimum clear. Please advise on structural accommodation or equipment relocation.
+
+RFI-003: Window U-factor in architectural notes shows 0.30, but energy model requires 0.28 for code compliance. Please confirm if window specification will be updated.
+
+RFI-004: Fire damper locations not shown on mechanical drawings for shaft penetrations. Please provide shop drawings with damper schedule.
+
+RFI-005: Lobby floor finish shown as polished concrete on A-101, but interior finish schedule shows terrazzo. Please confirm final material selection.

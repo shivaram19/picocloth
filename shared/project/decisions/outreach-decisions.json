@@ -1,0 +1,218 @@
+[
+  {
+    "decision_id": "msg-kostya-rapina-223635",
+    "timestamp": "2026-04-23T22:36:35.014195+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Kostya Rapina at Powerkh",
+    "choice": "Crafted message with hook: Powerkh's UK expansion...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-han-hoang-223641",
+    "timestamp": "2026-04-23T22:36:41.628534+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Han Hoang at THE BIM FACTORY",
+    "choice": "Crafted message with hook: THE BIM FACTORY's C-DRIVE methodology...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-kostya-rapina-223709",
+    "timestamp": "2026-04-23T22:37:09.679218+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Kostya Rapina at Powerkh",
+    "choice": "Crafted message with hook: Powerkh's UK expansion...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-han-hoang-223714",
+    "timestamp": "2026-04-23T22:37:14.410996+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Han Hoang at THE BIM FACTORY",
+    "choice": "Crafted message with hook: THE BIM FACTORY's C-DRIVE methodology...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-kostya-rapina-223818",
+    "timestamp": "2026-04-23T22:38:18.418949+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Kostya Rapina at Powerkh",
+    "choice": "Crafted message with hook: Powerkh's UK expansion...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-han-hoang-223824",
+    "timestamp": "2026-04-23T22:38:24.274202+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Han Hoang at THE BIM FACTORY",
+    "choice": "Crafted message with hook: THE BIM FACTORY's C-DRIVE methodology...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-kostya-rapina-223933",
+    "timestamp": "2026-04-23T22:39:33.693180+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Kostya Rapina at Powerkh",
+    "choice": "Crafted message with hook: Powerkh's UK expansion...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-han-hoang-223938",
+    "timestamp": "2026-04-23T22:39:38.437240+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Han Hoang at THE BIM FACTORY",
+    "choice": "Crafted message with hook: THE BIM FACTORY's C-DRIVE methodology...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-kostya-rapina-224033",
+    "timestamp": "2026-04-23T22:40:33.354569+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Kostya Rapina at Powerkh",
+    "choice": "Crafted message with hook: Powerkh's UK expansion...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-kostya-rapina-224111",
+    "timestamp": "2026-04-23T22:41:11.866610+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Kostya Rapina at Powerkh",
+    "choice": "Crafted message with hook: Powerkh's UK expansion...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "checkpoint-224125",
+    "timestamp": "2026-04-23T22:41:25.315840+00:00",
+    "archetype": "Courier",
+    "context": "Auto-login resulted in LinkedIn checkpoint",
+    "choice": "Halted autonomous execution — checkpoint requires human",
+    "rationale": "Guardian protocol: never bypass CAPTCHA/checkpoint autonomously",
+    "expected_outcome": "User resolves checkpoint, re-runs with saved session"
+  },
+  {
+    "decision_id": "msg-kostya-rapina-225429",
+    "timestamp": "2026-04-23T22:54:29.197781+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Kostya Rapina at Powerkh",
+    "choice": "Crafted message with hook: Powerkh's UK expansion...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "session-acq-20260423-225421",
+    "timestamp": "2026-04-23T22:54:29.199127+00:00",
+    "archetype": "Orchestrator-Guide",
+    "context": "No valid LinkedIn session before DELIVER stage",
+    "choice": "Enter Session Acquisition Mode",
+    "rationale": "Human-in-the-loop is required for initial session creation",
+    "expected_outcome": "Valid session file appears in state/sessions/"
+  },
+  {
+    "decision_id": "msg-kostya-rapina-230230",
+    "timestamp": "2026-04-23T23:02:30.724490+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Kostya Rapina at Powerkh",
+    "choice": "Crafted message with hook: Powerkh's UK expansion...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-han-hoang-230240",
+    "timestamp": "2026-04-23T23:02:40.472394+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Han Hoang at THE BIM FACTORY",
+    "choice": "Crafted message with hook: THE BIM FACTORY's C-DRIVE methodology...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-kostya-rapina-230346",
+    "timestamp": "2026-04-23T23:03:46.942325+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Kostya Rapina at Powerkh",
+    "choice": "Crafted message with hook: Powerkh's UK expansion...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-kostya-rapina-230420",
+    "timestamp": "2026-04-23T23:04:20.590986+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Kostya Rapina at Powerkh",
+    "choice": "Crafted message with hook: Powerkh's UK expansion...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-han-hoang-230424",
+    "timestamp": "2026-04-23T23:04:24.583351+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Han Hoang at THE BIM FACTORY",
+    "choice": "Crafted message with hook: THE BIM FACTORY's C-DRIVE methodology...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "session-acq-20260423-230412",
+    "timestamp": "2026-04-23T23:04:24.584309+00:00",
+    "archetype": "Orchestrator-Guide",
+    "context": "No valid LinkedIn session before DELIVER stage",
+    "choice": "Enter Session Acquisition Mode",
+    "rationale": "Human-in-the-loop is required for initial session creation",
+    "expected_outcome": "Valid session file appears in state/sessions/"
+  },
+  {
+    "decision_id": "msg-kostya-rapina-231959",
+    "timestamp": "2026-04-23T23:19:59.373099+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Kostya Rapina at Powerkh",
+    "choice": "Crafted message with hook: Powerkh's UK expansion...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-han-hoang-232005",
+    "timestamp": "2026-04-23T23:20:05.361499+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Han Hoang at THE BIM FACTORY",
+    "choice": "Crafted message with hook: THE BIM FACTORY's C-DRIVE methodology...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-ajith-menon-232014",
+    "timestamp": "2026-04-23T23:20:14.656174+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Ajith Menon at BIMAGE Consulting",
+    "choice": "Crafted message with hook: BIMAGE Consulting's 400+ projects...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-tristen-magallanes-232023",
+    "timestamp": "2026-04-23T23:20:23.850750+00:00",
+    "archetype": "Messenger",
+    "context": "Research on Tristen Magallanes at DPR Construction",
+    "choice": "Crafted message with hook: DPR Construction's WND Ventures...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  },
+  {
+    "decision_id": "msg-david-antony-232031",
+    "timestamp": "2026-04-23T23:20:31.279998+00:00",
+    "archetype": "Messenger",
+    "context": "Research on David Antony at Flatworld Solutions",
+    "choice": "Crafted message with hook: Flatworld Solutions's AI steering...",
+    "rationale": "Specific hook + validation + open question",
+    "expected_outcome": "High response rate due to personalization"
+  }
+]

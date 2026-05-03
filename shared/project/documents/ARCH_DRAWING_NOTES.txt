@@ -1,0 +1,38 @@
+PROJECT: DOWNTOWN OFFICE TOWER - ARCHITECTURAL DRAWING NOTES
+SHEET A-101 - GENERAL NOTES AND BUILDING PARAMETERS
+
+A. OCCUPANCY AND USE
+Building occupancy: Group B (Business)
+Total building area: 125,000 SF
+Number of floors: 8 above grade, 2 below grade (parking)
+Floor-to-floor height: 14 feet typical, 18 feet lobby
+
+B. THERMAL AND MOISTURE PROTECTION
+Wall R-value: R-21 minimum continuous insulation
+Roof R-value: R-30 minimum above deck
+Window U-factor: 0.30 maximum
+Window SHGC: 0.25 maximum
+
+C. INTERIOR FINISHES
+Office flooring: Carpet tile, 24" x 24" modular
+Conference room flooring: Luxury vinyl tile (LVT)
+Lobby flooring: Polished concrete with stain
+Wall finishes: Paint on Level 5 drywall
+Ceiling: ACT 2' x 4' tile, 9 feet AFF typical
+
+D. HVAC COORDINATION - ARCHITECTURAL
+Mechanical room minimum ceiling height: 12 feet clear
+All ceiling plenums shall be minimum 18 inches deep for duct routing
+Diffuser locations coordinated with reflected ceiling plan A-201
+Thermostat locations per electrical plan E-301
+
+E. FIRE RATED ASSEMBLIES
+All shafts: 2-hour rated
+Floor assemblies: 2-hour rated
+Exit corridors: 1-hour rated
+Tenant demising walls: 1-hour rated
+
+F. ACCESSIBILITY
+All design shall comply with ADA 2010 Standards and local accessibility codes.
+Minimum clear door width: 32 inches
+Maximum ramp slope: 1:12

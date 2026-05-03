@@ -1,0 +1,76 @@
+{
+  "prospects": [
+    {
+      "id": "kostya-rapina",
+      "name": "Kostya Rapina",
+      "company": "Powerkh",
+      "role": "CEO",
+      "profile_url": "https://www.linkedin.com/in/kostya-rapina/",
+      "industry": "VDC Construction",
+      "status": "already_connected",
+      "enriched": true,
+      "message": "Hi Kostya, the approach Powerkh is taking with Powerkh's UK expansion is really interesting. I'd love to stay connected on VDC Construction trends.",
+      "last_contact": "2026-04-23T23:20:36.826216+00:00",
+      "confidence": 0.92,
+      "tags": []
+    },
+    {
+      "id": "han-hoang",
+      "name": "Han Hoang",
+      "company": "THE BIM FACTORY",
+      "role": "CEO",
+      "profile_url": "https://www.linkedin.com/in/han-hoang-6645a810/",
+      "industry": "VDC Consulting",
+      "status": "already_connected",
+      "enriched": true,
+      "message": "Hi Han, the approach THE BIM FACTORY is taking with THE BIM FACTORY's C-DRIVE methodology is really interesting. I'd love to stay connected on VDC Consulting trends.",
+      "last_contact": "2026-04-23T23:21:23.855827+00:00",
+      "confidence": 0.92,
+      "tags": []
+    },
+    {
+      "id": "ajith-menon",
+      "name": "Ajith Menon",
+      "company": "BIMAGE Consulting",
+      "role": "CEO",
+      "profile_url": "https://www.linkedin.com/in/ajith-menon-7a5a9a10/",
+      "industry": "VDC Services",
+      "status": "already_connected",
+      "enriched": true,
+      "message": "Hi Ajith, the approach BIMAGE Consulting is taking with BIMAGE Consulting's 400+ projects is really interesting. I'd love to stay connected on VDC Services trends.",
+      "last_contact": "2026-04-23T23:22:12.051169+00:00",
+      "confidence": 0.92,
+      "tags": []
+    },
+    {
+      "id": "tristen-magallanes",
+      "name": "Tristen Magallanes",
+      "company": "DPR Construction",
+      "role": "R&D",
+      "profile_url": "https://www.linkedin.com/in/tristen-magallanes-5a5a9a10/",
+      "industry": "Construction Tech",
+      "status": "already_connected",
+      "enriched": true,
+      "message": "Hi Tristen, DPR Construction's WND Ventures caught my attention. I'm exploring similar challenges in Construction Tech. Mind if we connect?",
+      "last_contact": "2026-04-23T23:23:17.259859+00:00",
+      "confidence": 0.92,
+      "tags": []
+    },
+    {
+      "id": "david-antony",
+      "name": "David Antony",
+      "company": "Flatworld Solutions",
+      "role": "COO",
+      "profile_url": "https://www.linkedin.com/in/david-antony-8a5a9a10/",
+      "industry": "BPO + VDC",
+      "status": "already_connected",
+      "enriched": true,
+      "message": "Hi David, I've been following Flatworld Solutions's work — especially Flatworld Solutions's AI steering. Would love to connect and exchange ideas on BPO + VDC and exchange ideas on BPO + VDC.",
+      "last_contact": "2026-04-23T23:24:02.049922+00:00",
+      "confidence": 0.92,
+      "tags": []
+    }
+  ],
+  "version": 1,
+  "last_updated": "2026-04-23T23:24:10.671076+00:00"
+}

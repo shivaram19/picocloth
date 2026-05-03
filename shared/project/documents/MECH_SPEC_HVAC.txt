@@ -1,0 +1,29 @@
+PROJECT: DOWNTOWN OFFICE TOWER - MECHANICAL SPECIFICATIONS
+SECTION 23 00 00 - HEATING, VENTILATING, AND AIR CONDITIONING
+
+1.1 GENERAL REQUIREMENTS
+All HVAC systems shall comply with ASHRAE 90.1-2022 energy standards and local building codes.
+
+1.2 TEMPERATURE SETPOINTS
+- Office spaces: Heating 70°F, Cooling 74°F (setback 65°F/78°F after hours)
+- Conference rooms: Heating 71°F, Cooling 73°F
+- Server room: Constant 68°F ± 2°F, 24/7 operation
+- Lobby/Atrium: Heating 72°F, Cooling 75°F
+
+1.3 AIR HANDLING UNITS
+Provide (4) variable air volume (VAV) air handling units, 25,000 CFM each.
+Units shall include:
+- MERV 13 filters minimum
+- Economizer controls with enthalpy-based switching
+- Variable frequency drives (VFD) on all fans
+- Discharge air temperature reset: 55°F to 60°F based on zone demand
+
+1.4 DUCTWORK
+All ductwork shall be galvanized steel, sealed to SMACNA Seal Class A.
+Main trunk velocity: 1,800 FPM maximum
+Branch velocity: 1,200 FPM maximum
+Minimum duct size: 6 inches diameter
+
+1.5 FIRE PROTECTION COORDINATION
+HVAC ducts penetrating fire-rated assemblies shall have fire dampers per NFPA 90A.
+Smoke dampers required at all smoke barrier penetrations.

@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "entity_type": "document_character",
+  "character_id": "mech-spec-hvac",
+  "name": "MECH-HVAC",
+  "full_name": "Mechanical HVAC Specifications",
+  "role": "climate_controller",
+  "document_type": "SPEC",
+  "project": "DOWNTOWN OFFICE TOWER",
+  "section": "23 00 00 - Heating, Ventilating, and Air Conditioning",
+  "capabilities": [
+    "temperature_control",
+    "air_handling",
+    "energy_compliance",
+    "equipment_specification"
+  ],
+  "key_facts": [
+    "Complies with ASHRAE 90.1-2022 energy standards",
+    "Office spaces: Heating 70°F, Cooling 74°F (setback 65°F/78°F after hours)",
+    "Conference rooms: Heating 71°F, Cooling 73°F",
+    "Server room: Constant 68°F ± 2°F, 24/7 operation",
+    "Lobby/Atrium: Heating 72°F, Cooling 75°F",
+    "(4) variable air volume (VAV) air handling units, 25,000 CFM each",
+    "MERV 13 filters minimum",
+    "Economizer controls with enthalpy-based switching",
+    "Variable frequency drives (VFD) on all fans",
+    "Discharge air temperature reset: 55°F to 60°F based on zone demand"
+  ],
+  "potential_conflicts": [
+    "RFI-002: Mechanical room ceiling height shown as 10 feet on A-101, but mechanical equipment requires 12 feet minimum clear"
+  ],
+  "status": "active",
+  "digital_twin_enabled": true,
+  "created_at": "2026-04-24T11:30:00Z"
+}

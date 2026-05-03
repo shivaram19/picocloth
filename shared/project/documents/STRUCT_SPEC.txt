@@ -1,0 +1,35 @@
+PROJECT: DOWNTOWN OFFICE TOWER - STRUCTURAL SPECIFICATIONS
+SECTION 03 30 00 - CAST-IN-PLACE CONCRETE
+
+1.1 GENERAL
+All concrete work shall comply with ACI 318-19 and local building codes.
+
+1.2 CONCRETE MIX DESIGNS
+- Footings: 3,000 psi minimum at 28 days
+- Columns: 5,000 psi minimum at 28 days  
+- Floor slabs: 4,000 psi minimum at 28 days
+- Post-tensioned slabs: 5,000 psi minimum at 28 days, high early strength
+
+1.3 REINFORCING STEEL
+All reinforcing shall be ASTM A615 Grade 60.
+Standard hook dimensions per ACI 318 Table 25.3.1.
+
+1.4 FIREPROOFING
+Structural steel columns and beams shall receive 2-hour fireproofing per IBC Table 601.
+Fireproofing material: Spray-applied cementitious, minimum 1.5 inches thick
+
+1.5 STRUCTURAL STEEL
+Wide flange beams: ASTM A992, Grade 50
+Connection design per AISC 360-16
+
+1.6 DEAD LOADS
+Floor finish: 2 psf
+Partitions: 15 psf (movable)
+Mechanical/electrical: 10 psf
+Ceiling: 3 psf
+
+1.7 LIVE LOADS
+Office areas: 50 psf
+Corridors: 100 psf
+Lobby/Atrium: 100 psf
+Mechanical rooms: 150 psf

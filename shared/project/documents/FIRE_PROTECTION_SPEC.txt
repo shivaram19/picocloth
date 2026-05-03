@@ -1,0 +1,30 @@
+PROJECT: DOWNTOWN OFFICE TOWER - FIRE PROTECTION SPECIFICATIONS
+SECTION 21 13 13 - WET PIPE SPRINKLER SYSTEMS
+
+1.1 GENERAL
+All fire protection systems shall comply with NFPA 13 (2022 Edition) and local AHJ requirements.
+
+1.2 SPRINKLER DESIGN CRITERIA
+- Office areas: Light hazard, design density 0.10 gpm/SF over 1,500 SF
+- Mechanical rooms: Ordinary Hazard Group 1, design density 0.15 gpm/SF
+- Parking garages: Ordinary Hazard Group 1, design density 0.15 gpm/SF
+- Storage areas: Ordinary Hazard Group 2, design density 0.20 gpm/SF
+
+1.3 SPRINKLER SPACING
+Maximum spacing between sprinklers: 15 feet on center
+Maximum spacing from walls: 7.5 feet
+Maximum coverage per sprinkler: 225 SF (light hazard)
+
+1.4 WATER SUPPLY
+Fire pump required: 1,000 GPM at 120 psi
+Water supply test within 12 months required prior to system acceptance.
+
+1.5 STANDPIPES
+Class I standpipe system required per IBC 905.3
+Standpipe outlet spacing: Every floor, within 150 feet of any point
+
+1.6 FIRE ALARM
+Addressable fire alarm system per NFPA 72
+Smoke detectors in all return air plenums per NFPA 90A
+Duct smoke detectors at all air handling units
+Manual pull stations at all exits

@@ -1,0 +1,10 @@
+{"type":"deployment","content":"VDC Document Intelligence deployed via PicoCloth 2-node fleet","confidence":1.0,"extracted_at":"2026-04-24T11:30:00Z"}
+{"type":"document_character","content":"A-101 (Architectural Drawing Notes) - Design Visionary character loaded","confidence":1.0,"extracted_at":"2026-04-24T11:30:00Z"}
+{"type":"document_character","content":"FPS-211313 (Fire Protection Spec) - Safety Guardian character loaded","confidence":1.0,"extracted_at":"2026-04-24T11:30:00Z"}
+{"type":"document_character","content":"MECH-HVAC (Mechanical Spec) - Climate Controller character loaded","confidence":1.0,"extracted_at":"2026-04-24T11:30:00Z"}
+{"type":"document_character","content":"RFI-LOG (Question Keeper) - Tracks all active contradictions","confidence":1.0,"extracted_at":"2026-04-24T11:30:00Z"}
+{"type":"document_character","content":"STRUCT-CIP (Structural Spec) - Structure Engineer character loaded","confidence":1.0,"extracted_at":"2026-04-24T11:30:00Z"}
+{"type":"contradiction","content":"RFI-001: Column spacing mismatch at C-4 - Structural 24'-0\" vs Architectural 25'-0\"","confidence":0.95,"extracted_at":"2026-04-24T11:30:00Z"}
+{"type":"contradiction","content":"RFI-002: Mechanical room ceiling height 10 ft vs 12 ft minimum clear","confidence":0.95,"extracted_at":"2026-04-24T11:30:00Z"}
+{"type":"contradiction","content":"RFI-003: Window U-factor 0.30 vs 0.28 code requirement","confidence":0.90,"extracted_at":"2026-04-24T11:30:00Z"}
+{"type":"contradiction","content":"RFI-005: Lobby floor finish - polished concrete vs terrazzo","confidence":0.90,"extracted_at":"2026-04-24T11:30:00Z"}

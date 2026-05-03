@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "entity_type": "document_character",
+  "character_id": "arch-drawing-notes",
+  "name": "A-101",
+  "full_name": "Architectural Drawing Notes",
+  "role": "design_visionary",
+  "document_type": "ARCH",
+  "project": "DOWNTOWN OFFICE TOWER",
+  "sheet": "A-101",
+  "capabilities": [
+    "building_parameters",
+    "occupancy_classification",
+    "thermal_protection",
+    "interior_finishes"
+  ],
+  "key_facts": [
+    "Building occupancy: Group B (Business)",
+    "Total building area: 125,000 SF",
+    "Number of floors: 8 above grade, 2 below grade",
+    "Floor-to-floor height: 14 feet typical, 18 feet lobby",
+    "Wall R-value: R-21 minimum continuous insulation",
+    "Roof R-value: R-30 minimum above deck",
+    "Window U-factor: 0.30 maximum",
+    "Window SHGC: 0.25 maximum",
+    "Office flooring: Carpet tile, 24\" x 24\" modular",
+    "Conference room flooring: Luxury vinyl tile (LVT)",
+    "Lobby flooring: Polished concrete with stain"
+  ],
+  "potential_conflicts": [
+    "RFI-005: Lobby floor finish shown as polished concrete on A-101, but interior finish schedule shows terrazzo"
+  ],
+  "status": "active",
+  "digital_twin_enabled": true,
+  "created_at": "2026-04-24T11:30:00Z"
+}

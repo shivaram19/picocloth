@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "entity_type": "document_character",
+  "character_id": "rfi-log",
+  "name": "RFI-LOG",
+  "full_name": "Request for Information Log",
+  "role": "question_keeper",
+  "document_type": "LOG",
+  "project": "DOWNTOWN OFFICE TOWER",
+  "capabilities": [
+    "conflict_tracking",
+    "question_management",
+    "resolution_status",
+    "cross_reference_analysis"
+  ],
+  "key_facts": [
+    "RFI-001: Column spacing at Grid Line C-4 mismatch - Structural shows 24'-0\", architectural shows 25'-0\"",
+    "RFI-002: Mechanical room ceiling height 10 feet vs 12 feet minimum clear requirement",
+    "RFI-003: Window U-factor 0.30 in arch notes vs 0.28 required for code compliance",
+    "RFI-004: Fire damper locations not shown on mechanical drawings for shaft penetrations",
+    "RFI-005: Lobby floor finish - polished concrete vs terrazzo discrepancy"
+  ],
+  "potential_conflicts": [
+    "All RFIs represent active document contradictions that need resolution"
+  ],
+  "status": "active",
+  "digital_twin_enabled": true,
+  "created_at": "2026-04-24T11:30:00Z"
+}
