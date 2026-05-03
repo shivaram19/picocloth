@@ -1,0 +1,13 @@
+# PicoCloth Outreach Engine Dependencies
+# Install: pip install -r requirements.txt
+# Then: playwright install chromium
+
+# Browser automation
+playwright>=1.40.0
+playwright-stealth>=2.0.0
+
+# Web research
+ddgs>=9.0.0
+
+# Environment management
+python-dotenv>=1.0.0

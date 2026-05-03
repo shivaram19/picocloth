@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PicoCloth Outreach — Session Capture</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; background: #0d1117; color: #c9d1d9; }
+        h1 { color: #58a6ff; }
+        .step { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin: 16px 0; }
+        .step h3 { margin-top: 0; color: #7ee787; }
+        button { background: #238636; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #2ea043; }
+        textarea { width: 100%; height: 200px; background: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 6px; padding: 12px; font-family: monospace; font-size: 12px; }
+        .done { color: #7ee787; font-weight: bold; }
+        code { background: #21262d; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>🪶 PicoCloth Outreach Engine</h1>
+    <h2>One-Time LinkedIn Session Capture</h2>
+    <p>This captures your LinkedIn session cookies so the fleet bot can send connection requests on your behalf.</p>
+    <p><strong>We never see your password.</strong> Only session cookies are captured.</p>
+
+    <div class="step">
+        <h3>Step 1: Log into LinkedIn</h3>
+        <p>Open <a href="https://www.linkedin.com" target="_blank">linkedin.com</a> in <strong>this browser</strong> and log in normally.</p>
+        <p>If you have 2FA, complete it. Make sure you can see your feed.</p>
+    </div>
+
+    <div class="step">
+        <h3>Step 2: Capture Session</h3>
+        <p>Click the button below. It will extract your session cookies and show them as JSON.</p>
+        <button onclick="capture()">🔐 Capture LinkedIn Session</button>
+    </div>
+
+    <div class="step">
+        <h3>Step 3: Copy & Paste to Server</h3>
+        <p>Copy the JSON below and save it on your server as:</p>
+        <p><code>shared/project/outreach/state/sessions/linkedin.json</code></p>
+        <textarea id="output" placeholder="Click 'Capture' above to generate session JSON..."></textarea>
+    </div>
+
+    <div class="step">
+        <h3>Step 4: Run the Bot</h3>
+        <p>Back on your server, run:</p>
+        <code>python3 shared/project/outreach/picocloth_outreach_engine.py --targets shared/project/outreach/targets.csv --limit 5</code>
+    </div>
+
+    <script>
+        function capture() {
+            const cookies = document.cookie.split('; ').map(c => {
+                const eq = c.indexOf('=');
+                const name = c.substring(0, eq);
+                const value = c.substring(eq + 1);
+                // Determine domain based on current hostname
+                const hostname = window.location.hostname;
+                const isLinkedIn = hostname.includes('linkedin.com');
+                const domain = isLinkedIn ? hostname : '.linkedin.com';
+                return {
+                    name: name,
+                    value: value,
+                    domain: domain.startsWith('.') ? domain : '.' + domain,
+                    path: '/'
+                };
+            });
+
+            const payload = {
+                source: 'picocloth_capture_session',
+                captured_at: new Date().toISOString(),
+                url: window.location.href,
+                cookies: cookies
+            };
+
+            document.getElementById('output').value = JSON.stringify(payload, null, 2);
+
+            // Also try to copy to clipboard
+            navigator.clipboard.writeText(JSON.stringify(payload, null, 2)).then(() => {
+                alert('✅ Session captured and copied to clipboard!\n\nPaste it into the server file now.');
+            }).catch(() => {
+                alert('✅ Session captured!\n\nCopy the JSON from the text box below.');
+            });
+        }
+    </script>
+</body>
+</html>
