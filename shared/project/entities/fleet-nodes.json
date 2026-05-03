@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "entity_type": "fleet_node",
+  "nodes": [
+    {
+      "id": "node-a",
+      "name": "Curiosity Brain",
+      "role": "research_orchestrator",
+      "capabilities": ["web_search", "spawn", "synthesize"],
+      "model_preference": "light_for_triage_heavy_for_synthesis",
+      "status": "registered"
+    },
+    {
+      "id": "node-b",
+      "name": "Executor Builder",
+      "role": "execution_engineer",
+      "capabilities": ["shell", "write_file", "test", "deploy"],
+      "model_preference": "heavy_for_code_light_for_ops",
+      "status": "registered"
+    }
+  ],
+  "created_at": "2026-04-23T10:00:00Z"
+}
