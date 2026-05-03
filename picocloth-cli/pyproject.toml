@@ -1,0 +1,97 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "picocloth-cli"
+version = "0.1.0"
+description = "A research-backed CLI for orchestrating the PicoCloth fleet of intent-driven agents."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "PicoCloth Contributors"}
+]
+keywords = ["cli", "ai", "agents", "fleet", "mcp", "orchestration"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: System :: Systems Administration",
+]
+
+dependencies = [
+    # CLI framework — Typer: rapid development with type hints, auto-generated help
+    # Citation: Typer docs; OpenHands V1 SDK modularity (arXiv:2511.03690v1)
+    "typer>=0.15.0",
+    "click>=8.1.0",
+    
+    # Terminal rendering — Rich: tables, progress, markdown, syntax highlighting
+    # Citation: Rich project (github.com/Textualize/rich); Toad CLI pattern
+    "rich>=13.9.0",
+    
+    # Full TUI framework — Textual: reactive widgets, TCSS, async-native
+    # Citation: Textual docs; RealPython 2025 tutorial
+    "textual>=1.0.0",
+    
+    # Data validation — Pydantic: type-safe models, JSON schema generation
+    # Citation: Microsoft Agent Framework 1.0 pluggable memory pattern
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.7.0",
+    
+    # YAML config support
+    "pyyaml>=6.0.2",
+    
+    # Async HTTP client for node gateway communication
+    # Citation: agent-fleet Streamable HTTP MCP transport pattern
+    "httpx>=0.28.0",
+    
+    # Structured logging with JSON output for Langfuse integration
+    "structlog>=24.4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.25.0",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.9.0",
+    "mypy>=1.14.0",
+    "types-pyyaml>=6.0.0",
+]
+
+[project.scripts]
+picocloth = "picocloth_cli.main:app"
+
+[project.urls]
+Homepage = "https://github.com/picocloth/picocloth"
+Documentation = "https://github.com/picocloth/picocloth/tree/main/picocloth-cli/docs"
+Repository = "https://github.com/picocloth/picocloth.git"
+Issues = "https://github.com/picocloth/picocloth/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/picocloth_cli"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
