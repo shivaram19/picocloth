@@ -1,0 +1,16 @@
+#!/bin/bash
+# Mngr agent wrapper for node-c
+# This agent monitors and proxies to the tmux session
+while true; do
+    if tmux has-session -t node-c 2>/dev/null; then
+        PORT=18792
+        if curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:${PORT}/health" 2>/dev/null | grep -q "200\|404"; then
+            echo "[12:34:34] node-c: ONLINE (port ${PORT})"
+        else
+            echo "[12:34:34] node-c: UNRESPONSIVE (port ${PORT})"
+        fi
+    else
+        echo "[12:34:34] node-c: TMUX SESSION MISSING"
+    fi
+    sleep 10
+done
