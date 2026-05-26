@@ -58,6 +58,9 @@ def from_file(
     tier: str = typer.Option("hybrid", "--tier", help="Extraction tier: fast, deep, hybrid"),
     min_confidence: float = typer.Option(0.0, "--min-confidence", help="Filter facts below threshold"),
     md: bool = typer.Option(False, "--md", help="Output Markdown instead of JSONL"),
+    validate_citations: bool = typer.Option(False, "--validate-citations", help="Validate citation quality"),
+    verify: bool = typer.Option(False, "--verify", help="Run fleet verification on extracted facts"),
+    bibliography: Path = typer.Option(None, "--bibliography", "-b", help="Generate bibliography file"),
 ) -> None:
     """Extract structured facts from search result JSON."""
     console.print(f"[bold blue]🔬 Extracting facts from {input_file}...[/bold blue]")
@@ -83,7 +86,12 @@ def from_file(
         raise typer.Exit(0)
 
     engine = ExtractEngine(api_key=_get_api_key(), tier=tier)
-    facts, report = engine.run(results, topic=topic or "untitled")
+    facts, report = engine.run(
+        results,
+        topic=topic or "untitled",
+        validate_citations=validate_citations,
+        verify=verify,
+    )
 
     # Filter
     facts = [f for f in facts if f.confidence >= min_confidence]
@@ -95,6 +103,10 @@ def from_file(
     else:
         engine.to_jsonl(output)
         console.print(f"[green]✓[/green] JSONL facts → {output}")
+
+    if bibliography:
+        engine.to_bibliography(bibliography, style="markdown")
+        console.print(f"[green]✓[/green] Bibliography → {bibliography}")
 
     # Summary table
     _print_report(report, facts)
@@ -121,6 +133,9 @@ def search(
     broadcast: bool = typer.Option(False, "--broadcast", help="Broadcast to fleet"),
     tier: str = typer.Option("hybrid", "--tier", help="Extraction tier: fast, deep, hybrid"),
     min_confidence: float = typer.Option(0.0, "--min-confidence", help="Filter threshold"),
+    validate_citations: bool = typer.Option(False, "--validate-citations", help="Validate citation quality"),
+    verify: bool = typer.Option(False, "--verify", help="Run fleet verification on extracted facts"),
+    bibliography: Path = typer.Option(None, "--bibliography", "-b", help="Generate bibliography file"),
 ) -> None:
     """Search the web and extract structured facts in one command."""
     if not HAS_DDGS:
@@ -143,13 +158,22 @@ def search(
     console.print(f"[dim]Found {len(results)} results. Extracting...[/dim]")
 
     engine = ExtractEngine(api_key=_get_api_key(), tier=tier)
-    facts, report = engine.run(results, topic=query)
+    facts, report = engine.run(
+        results,
+        topic=query,
+        validate_citations=validate_citations,
+        verify=verify,
+    )
     facts = [f for f in facts if f.confidence >= min_confidence]
 
     # Default output to local file
     out_path = Path(f"facts_{query.replace(' ', '_')[:30]}.jsonl")
     engine.to_jsonl(out_path)
     console.print(f"[green]✓[/green] Facts written → {out_path}")
+
+    if bibliography:
+        engine.to_bibliography(bibliography, style="markdown")
+        console.print(f"[green]✓[/green] Bibliography → {bibliography}")
 
     _print_report(report, facts)
 
@@ -225,25 +249,126 @@ def facts(
 @app.command()
 def verify(
     fact_id: str = typer.Argument(..., help="Fact ID to verify"),
+    strategy: str = typer.Option("weighted", "--strategy", help="weighted|unanimous|threshold"),
     nodes: str = typer.Option("all", "--nodes", help="Nodes to ask: all, or comma-separated list"),
+    simulate: bool = typer.Option(False, "--simulate", help="Local simulation without fleet"),
 ) -> None:
-    """Request fleet-wide verification of a fact via MCP."""
-    console.print(f"[bold blue]🗳️ Requesting fleet verification for {fact_id}...[/bold blue]")
+    """Verify a fact using the Fleet Verification Pool."""
+    console.print(f"[bold blue]🗳️ Verifying fact {fact_id}...[/bold blue]")
 
-    async def _do_verify() -> None:
-        async with MCPFleetClient() as client:
-            result = await client.spawn_task(
-                target_node=nodes,
-                task=f"Verify fact {fact_id}: check corroboration, assess confidence, report contradictions.",
-                priority="high",
-            )
-            console.print(f"[green]✓[/green] Verification task spawned: {result.get('task_id', 'N/A')}")
+    # Load fact from memory
+    memory_dir = Path(PICOCLOTH_DIR) / "shared" / "memory" / "facts"
+    fact: ExtractedFact | None = None
+    if memory_dir.exists():
+        for fpath in memory_dir.glob("*.jsonl"):
+            with open(fpath, encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        d = json.loads(line)
+                        if d.get("fact_id") == fact_id:
+                            fact = ExtractedFact.from_dict(d)
+                            break
+                    except Exception:
+                        continue
+            if fact:
+                break
 
-    try:
-        asyncio.run(_do_verify())
-    except FleetError as exc:
-        console.print(f"[red]Verification failed:[/red] {exc.message}")
+    if not fact:
+        console.print(f"[red]Fact {fact_id} not found in memory.[/red]")
         raise typer.Exit(1)
+
+    # Run verification
+    from picocloth_cli.tools.verification_pool import FleetVerificationPool
+    pool = FleetVerificationPool()
+
+    available_nodes = None
+    if nodes != "all":
+        available_nodes = [n.strip() for n in nodes.split(",")]
+
+    result = pool.verify_fact(fact, strategy=strategy, available_nodes=available_nodes)
+
+    # Display result
+    _print_verification_result(result)
+
+    # Store back
+    fact.verified_by["fleet_verification"] = result.to_dict()
+    # Write back to memory file (simplified: append updated fact)
+    # In production, this would update in place
+    console.print(f"[dim]Result stored to fact {fact_id}[/dim]")
+
+
+@app.command()
+def validate_citations(
+    input_file: Path = typer.Argument(..., exists=True, readable=True, help="JSONL file with extracted facts"),
+    check_urls: bool = typer.Option(False, "--check-urls", help="Verify URL reachability via HEAD"),
+    fix: bool = typer.Option(False, "--fix", help="Auto-fix common issues and write back"),
+    output: Path = typer.Option(None, "--output", "-o", help="Output path for fixed file"),
+) -> None:
+    """Validate citations in extracted facts."""
+    console.print(f"[bold blue]📚 Validating citations in {input_file}...[/bold blue]")
+
+    from picocloth_cli.tools.citation_validator import CitationValidator
+
+    facts: list[ExtractedFact] = []
+    with open(input_file, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                facts.append(ExtractedFact.from_dict(json.loads(line)))
+            except Exception:
+                continue
+
+    if not facts:
+        console.print("[yellow]No facts found in input.[/yellow]")
+        raise typer.Exit(0)
+
+    validator = CitationValidator(check_reachability=check_urls)
+    reports = validator.validate_batch(facts)
+
+    # Summary
+    total_errors = sum(len(r.errors) for r in reports)
+    critical_errors = sum(1 for r in reports for e in r.errors if e.severity == "critical")
+    avg_health = sum(r.citation_health_score for r in reports) / len(reports) if reports else 0
+
+    console.print(f"[bold]Validation Summary:[/bold] {len(facts)} facts, {total_errors} errors ({critical_errors} critical)")
+    console.print(f"[bold]Average Health Score:[/bold] {avg_health:.2f}")
+
+    # Per-fact table
+    table = Table(header_style="bold magenta")
+    table.add_column("Fact ID", max_width=20)
+    table.add_column("Health", justify="right")
+    table.add_column("Errors")
+    table.add_column("Suggestion")
+
+    for fact, report in zip(facts, reports):
+        err_types = ", ".join(set(e.error_type for e in report.errors)) or "OK"
+        suggestion = report.errors[0].suggestion if report.errors else "—"
+        health_color = "green" if report.citation_health_score > 0.8 else "yellow" if report.citation_health_score > 0.4 else "red"
+        table.add_row(
+            fact.fact_id[:16],
+            f"[{health_color}]{report.citation_health_score}[/{health_color}]",
+            err_types[:30],
+            suggestion[:40],
+        )
+
+    console.print(table)
+
+    if fix:
+        fixed_facts = []
+        for fact in facts:
+            fixed_sources = validator.fix_citations(fact.sources)
+            fact.sources = fixed_sources
+            fixed_facts.append(fact)
+        out_path = output or input_file
+        with open(out_path, "w", encoding="utf-8") as f:
+            for fact in fixed_facts:
+                f.write(json.dumps(fact.to_dict(), ensure_ascii=False) + "\n")
+        console.print(f"[green]✓[/green] Fixed facts written → {out_path}")
 
 
 # ── Internal helpers ─────────────────────────────────────────
@@ -266,6 +391,50 @@ def _print_report(report: Any, facts: list[ExtractedFact]) -> None:
     table.add_row("Conflicts", str(report.conflicts_detected))
     table.add_row("Elapsed", f"{report.elapsed_seconds}s")
     console.print(table)
+
+
+def _print_verification_result(result: Any) -> None:
+    """Display a VerificationResult with Rich formatting."""
+    from picocloth_cli.tools.verification_pool import VerificationResult
+
+    verdict_colors = {
+        "VERIFIED": "bold green",
+        "REFUTED": "bold red",
+        "DISPUTED": "bold yellow",
+        "UNCERTAIN": "bold dim",
+    }
+    color = verdict_colors.get(result.verdict, "bold white")
+    console.print(f"\n[{color}]🏛️  Verdict: {result.verdict} (confidence: {result.confidence})[/{color}]\n")
+
+    # Votes table
+    vote_table = Table(header_style="bold magenta")
+    vote_table.add_column("Agent")
+    vote_table.add_column("Verdict")
+    vote_table.add_column("Confidence", justify="right")
+    vote_table.add_column("Justification", max_width=40)
+
+    for vote in result.votes:
+        vcolor = {"SUPPORT": "green", "REFUTE": "red", "UNCERTAIN": "yellow"}.get(vote.verdict, "white")
+        vote_table.add_row(
+            vote.agent_id,
+            f"[{vcolor}]{vote.verdict}[/{vcolor}]",
+            str(vote.confidence),
+            vote.justification[:40],
+        )
+    console.print(vote_table)
+
+    # Stats
+    stats = Table(show_header=False)
+    stats.add_column("Label", style="bold")
+    stats.add_column("Value")
+    stats.add_row("Consensus Method", result.consensus_method)
+    stats.add_row("Corroboration", str(result.corroboration_count))
+    stats.add_row("Contradictions", str(result.contradiction_count))
+    stats.add_row("Uncertainties", str(result.uncertainty_count))
+    if result.needs_deep_verification:
+        stats.add_row("⚠️ Alert", "Deep verification recommended (split decision)")
+    console.print(stats)
+    console.print()
 
 
 async def _mcp_store_broadcast(

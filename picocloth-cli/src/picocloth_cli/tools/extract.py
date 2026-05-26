@@ -544,8 +544,10 @@ class ExtractEngine:
         self,
         inputs: list[dict[str, Any]],
         topic: str = "",
+        validate_citations: bool = False,
+        verify: bool = False,
     ) -> tuple[list[ExtractedFact], ExtractReport]:
-        """Full pipeline: ingest → extract (tiered) → merge → cross-ref."""
+        """Full pipeline: ingest → extract (tiered) → cross-ref → validate → verify → merge."""
         start = time.time()
         all_facts: list[ExtractedFact] = []
         tier_counts = {1: 0, 2: 0, 3: 0}
@@ -577,6 +579,18 @@ class ExtractEngine:
         # Cross-reference
         all_facts = self.xref.cross_reference(all_facts)
 
+        # ── Citation Validation (Gap 9) ──────────────────────────
+        if validate_citations:
+            from picocloth_cli.tools.citation_validator import CitationValidator
+            validator = CitationValidator(check_reachability=False)
+            reports = validator.validate_batch(all_facts)
+            for fact, report in zip(all_facts, reports):
+                fact.verified_by["citation_validation"] = report.to_dict()
+                health = report.citation_health_score
+                fact.confidence = round(fact.confidence * health, 2)
+                fact.confidence_breakdown["citation_health"] = round(health, 2)
+            logger.info("Citation validation: %d facts checked", len(all_facts))
+
         # Deduplicate by ID
         seen: set[str] = set()
         unique: list[ExtractedFact] = []
@@ -587,6 +601,22 @@ class ExtractEngine:
 
         # Merge into memory
         accepted, ops = self.merger.merge(unique, topic)
+
+        # ── Fleet Verification (Gap 5) ───────────────────────────
+        if verify:
+            from picocloth_cli.tools.verification_pool import FleetVerificationPool
+            pool = FleetVerificationPool()
+            results = pool.verify_batch(accepted, strategy="weighted")
+            for fact, result in zip(accepted, results):
+                fact.verified_by["fleet_verification"] = result.to_dict()
+                if result.verdict == "VERIFIED":
+                    fact.confidence = round(min(0.98, fact.confidence + 0.05), 2)
+                    fact.confidence_breakdown["verification_boost"] = 0.05
+                elif result.verdict == "REFUTED":
+                    fact.confidence = round(max(0.0, fact.confidence - 0.20), 2)
+                    fact.confidence_breakdown["verification_penalty"] = -0.20
+            logger.info("Fleet verification: %d facts verified", len(accepted))
+
         self.facts = accepted
 
         elapsed = time.time() - start
@@ -644,3 +674,16 @@ class ExtractEngine:
                 lines.append(f"- ⚠️ **Conflicts:** {len(f.contradicts)}")
             lines.append("")
         Path(path).write_text("\n".join(lines), encoding="utf-8")
+
+    def to_bibliography(self, path: Path | str, style: str = "inline-url") -> None:
+        """Generate formatted bibliography from extracted facts.
+
+        Styles:
+          inline-url  → [1] Title. https://example.com
+          markdown    → 1. [Title](URL)
+          apa-like    → [1] Title. Retrieved from URL
+        """
+        from picocloth_cli.tools.citation_validator import CitationValidator
+        validator = CitationValidator()
+        bib = validator.generate_bibliography(self.facts, style=style)
+        Path(path).write_text(bib, encoding="utf-8")

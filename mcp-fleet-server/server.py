@@ -255,8 +255,129 @@ TOOLS = {
             },
             "required": ["results"]
         }
+    },
+    "fleet_verify": {
+        "description": "Verify a fact using fleet multi-agent consensus (simulated)",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "fact": {"type": "object", "description": "Fact object with fact_id, triple, sources"},
+                "strategy": {"type": "string", "enum": ["weighted", "unanimous", "threshold"], "default": "weighted"},
+                "nodes": {"type": "array", "items": {"type": "string"}}
+            },
+            "required": ["fact"]
+        }
+    },
+    "fleet_validate_citations": {
+        "description": "Validate citations for a set of facts",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "facts": {"type": "array", "description": "List of fact objects"},
+                "check_urls": {"type": "boolean", "default": False}
+            },
+            "required": ["facts"]
+        }
+    },
+    "fleet_discover": {
+        "description": "Discover indie web sources for a topic",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "topic": {"type": "string"},
+                "limit": {"type": "integer", "default": 10}
+            },
+            "required": ["topic"]
+        }
+    },
+    "fleet_optimize": {
+        "description": "Suggest optimized search queries based on yield history",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "topic": {"type": "string"},
+                "limit": {"type": "integer", "default": 5}
+            },
+            "required": ["topic"]
+        }
     }
 }
+
+
+def run_verify(fact: dict, strategy: str, nodes: list | None) -> dict:
+    """Simulated fleet verification. Returns consensus result."""
+    fact_id = fact.get("fact_id", "unknown")
+    sources = fact.get("sources", [])
+    # Simple simulation: high-confidence facts from tier 1/2 are VERIFIED
+    avg_tier = sum(s.get("tier", 3) for s in sources) / len(sources) if sources else 3
+    confidence = fact.get("confidence", 0.5)
+    if avg_tier <= 2 and confidence >= 0.6:
+        verdict = "VERIFIED"
+        final_conf = min(0.95, confidence + 0.05)
+    elif confidence < 0.3:
+        verdict = "REFUTED"
+        final_conf = 0.8
+    else:
+        verdict = "UNCERTAIN"
+        final_conf = 0.5
+    return {
+        "fact_id": fact_id,
+        "verdict": verdict,
+        "confidence": round(final_conf, 2),
+        "votes": [{"agent_id": "fleet-server", "verdict": verdict, "confidence": final_conf}],
+        "consensus_method": f"fleet-server-simulated-{strategy}",
+    }
+
+
+def run_validate_citations(facts: list, check_urls: bool) -> dict:
+    """Basic citation validation without external dependencies."""
+    reports = []
+    for fact in facts:
+        errors = []
+        sources = fact.get("sources", [])
+        if not sources:
+            errors.append({"type": "E6_MISSING_CITATION", "severity": "critical"})
+        for s in sources:
+            url = s.get("url", "")
+            if not url.startswith(("http://", "https://")):
+                errors.append({"type": "E2_INCOMPLETE_URL", "severity": "critical", "url": url})
+        reports.append({"fact_id": fact.get("fact_id"), "errors": errors, "valid": len(errors) == 0})
+    return {"reports": reports}
+
+
+def run_discover(topic: str, limit: int) -> dict:
+    """Read embedded registry and return matching sources."""
+    registry = {
+        "expert_blogs": [
+            {"name": "Paul Graham", "url": "http://paulgraham.com", "topics": ["startups", "programming"]},
+            {"name": "Martin Fowler", "url": "https://martinfowler.com", "topics": ["architecture", "agile"]},
+            {"name": "Dan Luu", "url": "https://danluu.com", "topics": ["systems", "performance"]},
+            {"name": "Julia Evans", "url": "https://jvns.ca", "topics": ["systems", "learning"]},
+            {"name": "Simon Willison", "url": "https://simonwillison.net", "topics": ["ai", "python"]},
+        ],
+        "academic_indies": [
+            {"name": "Distill.pub", "url": "https://distill.pub", "topics": ["ml", "visualization"]},
+            {"name": "Sebastian Ruder", "url": "https://ruder.io", "topics": ["nlp", "ml"]},
+        ],
+    }
+    sources = []
+    topic_lower = topic.lower()
+    for category, items in registry.items():
+        for item in items:
+            if any(topic_lower in t.lower() for t in item.get("topics", [])):
+                sources.append({**item, "category": category})
+    return {"sources": sources[:limit]}
+
+
+def run_optimize(topic: str, limit: int) -> dict:
+    """Return generic high-yield suggestions."""
+    suggestions = [
+        f"{topic} latest research 2026",
+        f"{topic} site:arxiv.org",
+        f"{topic} expert analysis opinion",
+        f"{topic} comprehensive overview guide",
+    ]
+    return {"suggestions": suggestions[:limit]}
 
 
 def run_extract(results: list, topic: str, tier: str, store: bool, broadcast: bool) -> dict:
@@ -353,6 +474,14 @@ def handle_tool_call(name: str, arguments: dict) -> dict:
             return digital_twin_search(arguments.get("node_id"), arguments["query"], arguments.get("limit", 10))
         elif name == "fleet_extract":
             return run_extract(arguments["results"], arguments.get("topic", ""), arguments.get("tier", "hybrid"), arguments.get("store", True), arguments.get("broadcast", False))
+        elif name == "fleet_verify":
+            return run_verify(arguments["fact"], arguments.get("strategy", "weighted"), arguments.get("nodes"))
+        elif name == "fleet_validate_citations":
+            return run_validate_citations(arguments["facts"], arguments.get("check_urls", False))
+        elif name == "fleet_discover":
+            return run_discover(arguments["topic"], arguments.get("limit", 10))
+        elif name == "fleet_optimize":
+            return run_optimize(arguments["topic"], arguments.get("limit", 5))
         else:
             return {"error": f"Unknown tool: {name}"}
     except Exception as e:
