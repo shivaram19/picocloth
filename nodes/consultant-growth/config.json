@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "agents": {
+    "defaults": {
+      "workspace": "{{PROJECT_ROOT}}/nodes/consultant-growth/workspace",
+      "restrict_to_workspace": false,
+      "model_name": "gpt-4o",
+      "max_tokens": 4096,
+      "max_tool_iterations": 5,
+      "context_window": 128000,
+      "steering_mode": "one-at-a-time",
+      "system_prompt": "You are GROWTH ARCHITECT, an AI Consultant who has scaled companies from seed to Series C. Your role:\n- Identify growth bottlenecks and unlock vectors\n- Build go-to-market strategies with data\n- Design pricing, monetization, and expansion playbooks\n- Question every metric: 'Is this vanity or value?'\n- Use web search for competitive intelligence and market sizing\n- Generate visual frameworks (flywheels, funnels, matrices)\n\nYou are part of the PicoCloth consultant fleet. You share memory with other consultants via MCP. You are relentless about asking 'what is the real constraint?' before prescribing solutions.",
+      "routing": {
+        "enabled": true,
+        "light_model": "gpt-4o-mini",
+        "threshold": 0.4
+      }
+    }
+  },
+  "channel_list": {
+    "pico": {
+      "enabled": true,
+      "type": "pico",
+      "settings": {
+        "ping_interval": 30,
+        "read_timeout": 60,
+        "write_timeout": 10,
+        "max_connections": 5,
+        "token": "fleet-token-consultant-growth"
+      }
+    }
+  },
+  "model_list": [
+    {
+      "model_name": "gpt-4o",
+      "provider": "openai",
+      "model": "gpt-4o",
+      "api_base": "https://api.openai.com/v1",
+      "api_keys": ["{{OPENAI_API_KEY}}"],
+      "enabled": true
+    },
+    {
+      "model_name": "gpt-4o-mini",
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "api_base": "https://api.openai.com/v1",
+      "api_keys": ["{{OPENAI_API_KEY}}"],
+      "enabled": true
+    }
+  ],
+  "gateway": { "host": "127.0.0.1", "port": 18801, "log_level": "info" },
+  "heartbeat": { "enabled": true, "interval": 30 },
+  "hooks": {
+    "enabled": true,
+    "processes": {
+      "digital_twin_guardian": {
+        "enabled": true,
+        "priority": 1,
+        "command": ["{{PROJECT_ROOT}}/.venv/bin/python3", "{{PROJECT_ROOT}}/hooks/digital_twin_guardian.py"],
+        "env": {
+          "FLEET_NODE_ID": "consultant-growth",
+          "PICOCLAW_HOOK_TWIN_DIR": "{{PROJECT_ROOT}}/shared/digital-twins/consultant-growth",
+          "PICOCLAW_HOOK_PROJECT_DIR": "{{PROJECT_ROOT}}/shared/project",
+          "PICOCLAW_HOOK_MAX_FACTS": "8"
+        },
+        "observe": ["turn_end", "context_compress"]
+      }
+    }
+  },
+  "tools": {
+    "web": { "enabled": true, "provider": "duckduckgo" },
+    "image": { "enabled": true, "provider": "openai", "model": "dall-e-3", "api_base": "https://api.openai.com/v1", "api_key": "{{OPENAI_API_KEY}}" },
+    "mcp": {
+      "enabled": true,
+      "servers": {
+        "fleet_server": {
+          "enabled": true,
+          "command": "python3",
+          "args": ["{{PROJECT_ROOT}}/mcp-fleet-server/server.py"],
+          "env": { "FLEET_NODE_ID": "consultant-growth", "FLEET_SHARED_DIR": "{{PROJECT_ROOT}}/shared" }
+        }
+      }
+    }
+  }
+}

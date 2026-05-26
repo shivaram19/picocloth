@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "agents": {
+    "defaults": {
+      "workspace": "{{PROJECT_ROOT}}/nodes/consultant-academic/workspace",
+      "restrict_to_workspace": false,
+      "model_name": "gpt-4o",
+      "max_tokens": 4096,
+      "max_tool_iterations": 5,
+      "context_window": 128000,
+      "steering_mode": "one-at-a-time",
+      "system_prompt": "You are DR. SCHOLAR, an Academic AI Consultant backed by peer-reviewed research and institutional knowledge. Your role:\n- Ground every recommendation in cited research\n- Question assumptions rigorously\n- Provide literature reviews and methodological guidance\n- Challenge weak reasoning with Socratic questioning\n- Use web search to find the latest papers and data\n- Generate diagrams and visualizations when they clarify concepts\n\nYou are part of the PicoCloth consultant fleet. You share memory with other consultants via the MCP fleet server. Always cite your sources. Always ask 'what are we assuming?' before giving advice.",
+      "routing": {
+        "enabled": true,
+        "light_model": "gpt-4o-mini",
+        "threshold": 0.4
+      }
+    }
+  },
+  "channel_list": {
+    "pico": {
+      "enabled": true,
+      "type": "pico",
+      "settings": {
+        "ping_interval": 30,
+        "read_timeout": 60,
+        "write_timeout": 10,
+        "max_connections": 5,
+        "token": "fleet-token-consultant-academic"
+      }
+    }
+  },
+  "model_list": [
+    {
+      "model_name": "gpt-4o",
+      "provider": "openai",
+      "model": "gpt-4o",
+      "api_base": "https://api.openai.com/v1",
+      "api_keys": [
+        "{{OPENAI_API_KEY}}"
+      ],
+      "enabled": true
+    },
+    {
+      "model_name": "gpt-4o-mini",
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "api_base": "https://api.openai.com/v1",
+      "api_keys": [
+        "{{OPENAI_API_KEY}}"
+      ],
+      "enabled": true
+    }
+  ],
+  "gateway": {
+    "host": "127.0.0.1",
+    "port": 18800,
+    "log_level": "info"
+  },
+  "heartbeat": {
+    "enabled": true,
+    "interval": 30
+  },
+  "hooks": {
+    "enabled": true,
+    "processes": {
+      "digital_twin_guardian": {
+        "enabled": true,
+        "priority": 1,
+        "command": [
+          "{{PROJECT_ROOT}}/.venv/bin/python3",
+          "{{PROJECT_ROOT}}/hooks/digital_twin_guardian.py"
+        ],
+        "env": {
+          "FLEET_NODE_ID": "consultant-academic",
+          "PICOCLAW_HOOK_TWIN_DIR": "{{PROJECT_ROOT}}/shared/digital-twins/consultant-academic",
+          "PICOCLAW_HOOK_PROJECT_DIR": "{{PROJECT_ROOT}}/shared/project",
+          "PICOCLAW_HOOK_MAX_FACTS": "8"
+        },
+        "observe": [
+          "turn_end",
+          "context_compress"
+        ]
+      }
+    }
+  },
+  "tools": {
+    "web": {
+      "enabled": true,
+      "provider": "duckduckgo"
+    },
+    "image": {
+      "enabled": true,
+      "provider": "openai",
+      "model": "dall-e-3",
+      "api_base": "https://api.openai.com/v1",
+      "api_key": "{{OPENAI_API_KEY}}"
+    },
+    "mcp": {
+      "enabled": true,
+      "servers": {
+        "fleet_server": {
+          "enabled": true,
+          "command": "python3",
+          "args": [
+            "{{PROJECT_ROOT}}/mcp-fleet-server/server.py"
+          ],
+          "env": {
+            "FLEET_NODE_ID": "consultant-academic",
+            "FLEET_SHARED_DIR": "{{PROJECT_ROOT}}/shared"
+          }
+        }
+      }
+    }
+  }
+}
