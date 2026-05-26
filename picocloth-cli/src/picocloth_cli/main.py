@@ -33,6 +33,7 @@ from picocloth_cli.commands import memory as memory_cmd
 from picocloth_cli.commands import twin as twin_cmd
 from picocloth_cli.commands import config as config_cmd
 from picocloth_cli.commands import extract as extract_cmd
+from picocloth_cli.commands import search as search_cmd
 
 # ---------------------------------------------------------------------------
 # Main Typer application
@@ -55,6 +56,7 @@ app.add_typer(memory_cmd.app, name="memory", help="Shared memory layer operation
 app.add_typer(twin_cmd.app, name="twin", help="Digital twin archive queries")
 app.add_typer(config_cmd.app, name="config", help="CLI configuration management")
 app.add_typer(extract_cmd.app, name="extract", help="Knowledge extraction from search results")
+app.add_typer(search_cmd.app, name="search", help="Knowledge discovery: clever, curious, targeted")
 
 
 # ---------------------------------------------------------------------------
