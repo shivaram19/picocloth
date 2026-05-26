@@ -238,8 +238,103 @@ TOOLS = {
             },
             "required": ["query"]
         }
+    },
+    "fleet_extract": {
+        "description": "Extract structured facts from search results and store in shared memory",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "results": {
+                    "type": "array",
+                    "description": "Search result objects with url, title, snippet/body"
+                },
+                "topic": {"type": "string", "description": "Query topic for context"},
+                "tier": {"type": "string", "enum": ["fast", "deep", "hybrid"], "default": "hybrid"},
+                "store": {"type": "boolean", "default": True},
+                "broadcast": {"type": "boolean", "default": False}
+            },
+            "required": ["results"]
+        }
     }
 }
+
+
+def run_extract(results: list, topic: str, tier: str, store: bool, broadcast: bool) -> dict:
+    """Run the extract engine on search results."""
+    import subprocess
+    import tempfile
+    import os
+
+    # Write results to temp file
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        json.dump(results, f)
+        input_path = f.name
+
+    # Determine engine path: prefer standalone, fallback to CLI package
+    engine_paths = [
+        Path(SHARED_DIR).parent / "shared" / "tools" / "extract-engine" / "extract_engine.py",
+        Path(__file__).parent.parent / "shared" / "tools" / "extract-engine" / "extract_engine.py",
+    ]
+    engine_path = None
+    for p in engine_paths:
+        if p.exists():
+            engine_path = p
+            break
+
+    if not engine_path:
+        # Inline fallback: minimal fast-lane extraction
+        facts = []
+        for r in results:
+            url = r.get("href") or r.get("link") or r.get("url", "")
+            title = r.get("title", "")
+            snippet = r.get("body", r.get("snippet", r.get("description", "")))
+            facts.append({
+                "fact_id": str(hash(snippet + url))[:16],
+                "topic": topic,
+                "triple": {"entity": topic, "relation": "mentions", "claim": snippet[:200]},
+                "raw_text": snippet,
+                "fact_type": "snippet",
+                "sources": [{"url": url, "domain": url.split("/")[2] if "//" in url else "unknown", "tier": 3}],
+                "confidence": 0.3,
+                "extraction_tier": "fallback"
+            })
+        return {"extracted": len(facts), "facts": facts, "engine": "fallback"}
+
+    cmd = [sys.executable, str(engine_path), "--input", input_path, "--topic", topic, "--tier", tier]
+    if not store:
+        cmd.append("--no-store")
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+        os.unlink(input_path)
+        if result.returncode == 0:
+            try:
+                output = json.loads(result.stdout)
+                if store:
+                    # Write to shared memory
+                    dir_path = Path(SHARED_DIR, "project", "facts")
+                    dir_path.mkdir(parents=True, exist_ok=True)
+                    path = dir_path / f"{topic.lower().replace(' ', '_')}.jsonl"
+                    with open(path, "a") as f:
+                        for fact in output.get("facts", []):
+                            f.write(json.dumps(fact) + "\n")
+                if broadcast:
+                    inbox_file = Path(SHARED_DIR, "state", "fleet-inbox.jsonl")
+                    entry = {
+                        "type": "extract_broadcast",
+                        "topic": topic,
+                        "facts_count": len(output.get("facts", [])),
+                        "timestamp": datetime.now(timezone.utc).isoformat()
+                    }
+                    with open(inbox_file, "a") as f:
+                        f.write(json.dumps(entry) + "\n")
+                return {"extracted": len(output.get("facts", [])), "facts": output.get("facts", []), "engine": "thee"}
+            except json.JSONDecodeError:
+                return {"extracted": 0, "raw": result.stdout[:500], "error": "Invalid JSON from engine"}
+        else:
+            return {"error": result.stderr[:500]}
+    except Exception as e:
+        return {"error": str(e)}
 
 
 def handle_tool_call(name: str, arguments: dict) -> dict:
@@ -256,6 +351,8 @@ def handle_tool_call(name: str, arguments: dict) -> dict:
             return memory_write(arguments["category"], arguments["key"], arguments["data"], arguments.get("append", False))
         elif name == "fleet_digital_twin_search":
             return digital_twin_search(arguments.get("node_id"), arguments["query"], arguments.get("limit", 10))
+        elif name == "fleet_extract":
+            return run_extract(arguments["results"], arguments.get("topic", ""), arguments.get("tier", "hybrid"), arguments.get("store", True), arguments.get("broadcast", False))
         else:
             return {"error": f"Unknown tool: {name}"}
     except Exception as e:

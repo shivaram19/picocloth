@@ -54,6 +54,10 @@ dependencies = [
     
     # Structured logging with JSON output for Langfuse integration
     "structlog>=24.4.0",
+    
+    # HTTP client for extract engine web fetching and LLM API calls
+    # Citation: VERITAS-NLI (2025) web retrieval pipeline
+    "requests>=2.31.0",
 ]
 
 [project.optional-dependencies]

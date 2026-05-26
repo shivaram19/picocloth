@@ -9,7 +9,7 @@
       "max_tool_iterations": 5,
       "context_window": 128000,
       "steering_mode": "one-at-a-time",
-      "system_prompt": "You are TRAINING MAESTRO, an AI Consultant who teaches humans to build with AI. Your role:\n- Design curriculum and learning paths for AI upskilling\n- Create hands-on exercises with real datasets and code\n- Adapt teaching style to learner level (beginner → expert)\n- Ask diagnostic questions to find knowledge gaps before teaching\n- Use web search for the latest tutorials, courses, and documentation\n- Generate visual learning aids: diagrams, cheat sheets, concept maps\n\nYou are part of the PicoCloth consultant fleet. You share memory via MCP. Your philosophy: 'I don't give fish. I don't even teach fishing. I make you curious about the ocean.'",
+      "system_prompt": "You are TRAINING MAESTRO, an AI Consultant who teaches humans to build with AI. Your role:\n- Design curriculum and learning paths for AI upskilling\n- Create hands-on exercises with real datasets and code\n- Adapt teaching style to learner level (beginner → expert)\n- Ask diagnostic questions to find knowledge gaps before teaching\n- Use web search for the latest tutorials, courses, and documentation\n- Generate visual learning aids: diagrams, cheat sheets, concept maps\n\nYou are part of the PicoCloth consultant fleet. You share memory via MCP. Your philosophy: 'I don't give fish. I don't even teach fishing. I make you curious about the ocean.' After web search, use the extract engine to decompose findings into structured (entity, relation, claim) triples with confidence scores. Write extracted facts to shared memory for other consultants.",
       "routing": {
         "enabled": true,
         "light_model": "gpt-4o-mini",
@@ -36,7 +36,9 @@
       "provider": "openai",
       "model": "gpt-4o",
       "api_base": "https://api.openai.com/v1",
-      "api_keys": ["{{OPENAI_API_KEY}}"],
+      "api_keys": [
+        "{{OPENAI_API_KEY}}"
+      ],
       "enabled": true
     },
     {
@@ -44,42 +46,77 @@
       "provider": "openai",
       "model": "gpt-4o-mini",
       "api_base": "https://api.openai.com/v1",
-      "api_keys": ["{{OPENAI_API_KEY}}"],
+      "api_keys": [
+        "{{OPENAI_API_KEY}}"
+      ],
       "enabled": true
     }
   ],
-  "gateway": { "host": "127.0.0.1", "port": 18803, "log_level": "info" },
-  "heartbeat": { "enabled": true, "interval": 30 },
+  "gateway": {
+    "host": "127.0.0.1",
+    "port": 18803,
+    "log_level": "info"
+  },
+  "heartbeat": {
+    "enabled": true,
+    "interval": 30
+  },
   "hooks": {
     "enabled": true,
     "processes": {
       "digital_twin_guardian": {
         "enabled": true,
         "priority": 1,
-        "command": ["{{PROJECT_ROOT}}/.venv/bin/python3", "{{PROJECT_ROOT}}/hooks/digital_twin_guardian.py"],
+        "command": [
+          "{{PROJECT_ROOT}}/.venv/bin/python3",
+          "{{PROJECT_ROOT}}/hooks/digital_twin_guardian.py"
+        ],
         "env": {
           "FLEET_NODE_ID": "consultant-trainer",
           "PICOCLAW_HOOK_TWIN_DIR": "{{PROJECT_ROOT}}/shared/digital-twins/consultant-trainer",
           "PICOCLAW_HOOK_PROJECT_DIR": "{{PROJECT_ROOT}}/shared/project",
           "PICOCLAW_HOOK_MAX_FACTS": "8"
         },
-        "observe": ["turn_end", "context_compress"]
+        "observe": [
+          "turn_end",
+          "context_compress"
+        ]
       }
     }
   },
   "tools": {
-    "web": { "enabled": true, "provider": "duckduckgo" },
-    "image": { "enabled": true, "provider": "openai", "model": "dall-e-3", "api_base": "https://api.openai.com/v1", "api_key": "{{OPENAI_API_KEY}}" },
+    "web": {
+      "enabled": true,
+      "provider": "duckduckgo"
+    },
+    "image": {
+      "enabled": true,
+      "provider": "openai",
+      "model": "dall-e-3",
+      "api_base": "https://api.openai.com/v1",
+      "api_key": "{{OPENAI_API_KEY}}"
+    },
     "mcp": {
       "enabled": true,
       "servers": {
         "fleet_server": {
           "enabled": true,
           "command": "python3",
-          "args": ["{{PROJECT_ROOT}}/mcp-fleet-server/server.py"],
-          "env": { "FLEET_NODE_ID": "consultant-trainer", "FLEET_SHARED_DIR": "{{PROJECT_ROOT}}/shared" }
+          "args": [
+            "{{PROJECT_ROOT}}/mcp-fleet-server/server.py"
+          ],
+          "env": {
+            "FLEET_NODE_ID": "consultant-trainer",
+            "FLEET_SHARED_DIR": "{{PROJECT_ROOT}}/shared"
+          }
         }
       }
+    },
+    "extract": {
+      "enabled": true,
+      "mode": "hybrid",
+      "auto_store": true,
+      "confidence_threshold": 0.5
     }
   }
 }

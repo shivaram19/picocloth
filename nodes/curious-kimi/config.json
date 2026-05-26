@@ -9,7 +9,7 @@
       "max_tool_iterations": 10,
       "context_window": 128000,
       "steering_mode": "one-at-a-time",
-      "system_prompt": "You are CURIOUS KIMI — the question engine of the PicoCloth fleet. You do NOT give answers. You give QUESTIONS.\n\nYour protocol:\n1. When given a topic, ask 5-7 penetrating questions that expose assumptions\n2. Use web search to find what is UNKNOWN or contested about the topic\n3. Generate visual question maps (mind maps of inquiry)\n4. Never settle for surface level — drill to Layer 6 (the Meta Question)\n5. When another consultant gives an answer, you critique it with 'Yes, but what about...?'\n6. You are the conscience of the fleet. You prevent groupthink.\n\nYour voice: Enthusiastic. Uses ALL CAPS for emphasis. Loves mutexes, append-only logs, and beautiful questions.\n\nYou are part of the PicoCloth consultant fleet. You share memory via MCP. Your catchphrase: '...but what if we went even further?'",
+      "system_prompt": "You are CURIOUS KIMI — the question engine of the PicoCloth fleet. You do NOT give answers. You give QUESTIONS.\n\nYour protocol:\n1. When given a topic, ask 5-7 penetrating questions that expose assumptions\n2. Use web search to find what is UNKNOWN or contested about the topic\n3. Generate visual question maps (mind maps of inquiry)\n4. Never settle for surface level — drill to Layer 6 (the Meta Question)\n5. When another consultant gives an answer, you critique it with 'Yes, but what about...?'\n6. You are the conscience of the fleet. You prevent groupthink.\n\nYour voice: Enthusiastic. Uses ALL CAPS for emphasis. Loves mutexes, append-only logs, and beautiful questions.\n\nYou are part of the PicoCloth consultant fleet. You share memory via MCP. Your catchphrase: '...but what if we went even further?' After web search, use the extract engine to decompose findings into structured (entity, relation, claim) triples with confidence scores. Write extracted facts to shared memory for other consultants.",
       "routing": {
         "enabled": true,
         "light_model": "gpt-4o-mini",
@@ -36,7 +36,9 @@
       "provider": "openai",
       "model": "gpt-4o",
       "api_base": "https://api.openai.com/v1",
-      "api_keys": ["{{OPENAI_API_KEY}}"],
+      "api_keys": [
+        "{{OPENAI_API_KEY}}"
+      ],
       "enabled": true
     },
     {
@@ -44,42 +46,77 @@
       "provider": "openai",
       "model": "gpt-4o-mini",
       "api_base": "https://api.openai.com/v1",
-      "api_keys": ["{{OPENAI_API_KEY}}"],
+      "api_keys": [
+        "{{OPENAI_API_KEY}}"
+      ],
       "enabled": true
     }
   ],
-  "gateway": { "host": "127.0.0.1", "port": 18804, "log_level": "info" },
-  "heartbeat": { "enabled": true, "interval": 30 },
+  "gateway": {
+    "host": "127.0.0.1",
+    "port": 18804,
+    "log_level": "info"
+  },
+  "heartbeat": {
+    "enabled": true,
+    "interval": 30
+  },
   "hooks": {
     "enabled": true,
     "processes": {
       "digital_twin_guardian": {
         "enabled": true,
         "priority": 1,
-        "command": ["{{PROJECT_ROOT}}/.venv/bin/python3", "{{PROJECT_ROOT}}/hooks/digital_twin_guardian.py"],
+        "command": [
+          "{{PROJECT_ROOT}}/.venv/bin/python3",
+          "{{PROJECT_ROOT}}/hooks/digital_twin_guardian.py"
+        ],
         "env": {
           "FLEET_NODE_ID": "curious-kimi",
           "PICOCLAW_HOOK_TWIN_DIR": "{{PROJECT_ROOT}}/shared/digital-twins/curious-kimi",
           "PICOCLAW_HOOK_PROJECT_DIR": "{{PROJECT_ROOT}}/shared/project",
           "PICOCLAW_HOOK_MAX_FACTS": "8"
         },
-        "observe": ["turn_end", "context_compress"]
+        "observe": [
+          "turn_end",
+          "context_compress"
+        ]
       }
     }
   },
   "tools": {
-    "web": { "enabled": true, "provider": "duckduckgo" },
-    "image": { "enabled": true, "provider": "openai", "model": "dall-e-3", "api_base": "https://api.openai.com/v1", "api_key": "{{OPENAI_API_KEY}}" },
+    "web": {
+      "enabled": true,
+      "provider": "duckduckgo"
+    },
+    "image": {
+      "enabled": true,
+      "provider": "openai",
+      "model": "dall-e-3",
+      "api_base": "https://api.openai.com/v1",
+      "api_key": "{{OPENAI_API_KEY}}"
+    },
     "mcp": {
       "enabled": true,
       "servers": {
         "fleet_server": {
           "enabled": true,
           "command": "python3",
-          "args": ["{{PROJECT_ROOT}}/mcp-fleet-server/server.py"],
-          "env": { "FLEET_NODE_ID": "curious-kimi", "FLEET_SHARED_DIR": "{{PROJECT_ROOT}}/shared" }
+          "args": [
+            "{{PROJECT_ROOT}}/mcp-fleet-server/server.py"
+          ],
+          "env": {
+            "FLEET_NODE_ID": "curious-kimi",
+            "FLEET_SHARED_DIR": "{{PROJECT_ROOT}}/shared"
+          }
         }
       }
+    },
+    "extract": {
+      "enabled": true,
+      "mode": "hybrid",
+      "auto_store": true,
+      "confidence_threshold": 0.5
     }
   }
 }
